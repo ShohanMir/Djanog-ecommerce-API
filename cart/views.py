@@ -29,7 +29,29 @@ def cart_add(request):
         return HttpResponseBadRequest('Invalid Request')
 
 def cart_delete(request):
-    pass
+    cart = Cart(request)
+    
+    if request.POST.get('action') == 'post':
+        product_id = int(request.POST.get('product_id'))
+        cart.delete(product=product_id)
+        cart_quantity = cart.__len__()
+        cart_total = cart.get_total()
+        
+        response = JsonResponse({'qty': cart_quantity, 'total': cart_total})
+        return response
+    else:
+        return HttpResponseBadRequest('Invalid Request')
 
 def cart_update(request):
-    pass
+    cart = Cart(request)
+    if request.POST.get('action') == 'post':
+        product_id = int(request.POST.get('product_id'))
+        product_quantty = int(request.POST.get('product_quantity'))
+        cart.update(product=product_id, qty=product_quantty)
+        cart_quantity = cart.__len__()
+        cart_total = cart.get_total()
+        
+        response = JsonResponse({'qty': cart_quantity, 'total': cart_total})
+        return response
+    else:
+        return HttpResponseBadRequest('Invalid request')
