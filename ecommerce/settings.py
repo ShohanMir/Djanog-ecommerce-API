@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'store', #django_app
     'cart', #django cart app functonality
+    'account', #app for user management
     'mathfilters' #add math filter extension
 ]
 
