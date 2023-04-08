@@ -1,12 +1,12 @@
-from django.contrib.auth.forms import userCreationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 from django import forms
 
-class CreateUserForm(userCreationForm):
+class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['name', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2']
         
     def __ini__(self, *args, **kwargs):
         super(CreateUserForm).__init__(*args, **kwargs)
