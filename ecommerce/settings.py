@@ -40,8 +40,13 @@ INSTALLED_APPS = [
     'store', #django_app
     'cart', #django cart app functonality
     'account', #app for user management
-    'mathfilters' #add math filter extension
+    'mathfilters', #add math filter extension
+    "crispy_forms",
+    "crispy_bootstrap4",
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
