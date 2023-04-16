@@ -1,9 +1,12 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.validators import EmailValidator
 
 from django import forms
 
+from django.forms.widgets import PasswordInput, TextInput
+
+#Registration form
 class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
@@ -31,3 +34,9 @@ class CreateUserForm(UserCreationForm):
             raise forms.ValidationError('Enter a valid email address.')
 
         return email
+    
+#Login form
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(widget=TextInput())
+    password = forms.CharField(widget=PasswordInput())
