@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'cart', #django cart app functonality
     'account', #app for user management
     'mathfilters', #add math filter extension
+    'payment', #app for payment
     "crispy_forms",
     "crispy_bootstrap4",
 ]

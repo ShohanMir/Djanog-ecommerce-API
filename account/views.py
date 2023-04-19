@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 # from django.http import HttpResponseBadRequest
-
+from django.contrib import messages
 from .forms import CreateUserForm, LoginForm, UpdateUserForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, auth
@@ -89,7 +89,15 @@ def my_login(request):
 
 
 def user_logout(request):
-    auth.logout(request)
+    try:
+        for key in list(request.session.keys()):
+            if key == 'session_key':
+                continue
+            else:
+                del request.session[key]
+    except KeyError:
+        pass
+    messages.susccess(request, "Login success!")
     return redirect("store")
 
 @login_required(login_url="my-login")
@@ -104,6 +112,7 @@ def profile_management(request):
         user_form = UpdateUserForm(request.POST, instance=request.user)
         if user_form.is_valid():
             user_form.save()
+            messages.info(request, 'Account updated')
             return redirect('dashboard')
     
     user_form = UpdateUserForm(instance=request.user)
@@ -115,5 +124,8 @@ def delete_account(request):
     user = User.objects.get(id=request.user.id)
     if request.method == 'POST':
         user.delete()
+        
+        messages.error(request, "Account deleted successfully!")
+        
         return redirect('store')
     return render(request, 'account/delete-account.html')
