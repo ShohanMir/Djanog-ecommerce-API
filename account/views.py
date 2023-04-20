@@ -2,6 +2,8 @@ from django.shortcuts import redirect, render
 # from django.http import HttpResponseBadRequest
 from django.contrib import messages
 from .forms import CreateUserForm, LoginForm, UpdateUserForm
+from payment.forms import ShippingForm
+from payment.models import ShippingAddress
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, auth
 from django.contrib.auth.decorators import login_required
@@ -97,7 +99,7 @@ def user_logout(request):
                 del request.session[key]
     except KeyError:
         pass
-    messages.susccess(request, "Login success!")
+    messages.success(request, "Login success!")
     return redirect("store")
 
 @login_required(login_url="my-login")
@@ -129,3 +131,27 @@ def delete_account(request):
         
         return redirect('store')
     return render(request, 'account/delete-account.html')
+
+# Shipping view
+@login_required(login_url="my-login")
+def manage_shipping(request):
+    try:
+        shipping = ShippingAddress.objects.get(user=request.user.id)
+    except ShippingAddress.DoesNotExist:
+        shipping = None
+        
+    form = ShippingForm(instance=shipping)
+    
+    if request.method == 'POST':
+        form = ShippingForm(request.POST, instance=shipping)
+        
+        if form.is_valid():
+            # Assign the user fk on the object
+            shipping_user = form.save(commit=False)
+            #adding the fk itself
+            shipping_user.user = request.user
+            shipping_user.save()
+            return redirect('dashboard')
+
+    context = {'form': form}
+    return render(request, 'account/manage-shipping.html', context=context)
