@@ -62,7 +62,7 @@ def complete_order(request):
             order_id = order.pk
             
             for item in cart:
-                OrderItem.objects.create(order_id=order_id, product=item['product'], quantity=item['qty'], price=item['price'], user=request.user)
+                OrderItem.objects.create(order_id=order_id, product=item['product'], quantity=item['qty'], price=item['price'])
         
         order_success = True
         response = JsonResponse({'success': order_success})
@@ -71,6 +71,12 @@ def complete_order(request):
         
 
 def payment_success(request):
+    
+    # clear shopping cart
+    
+    for key in list(request.session.keys()):
+        del request.session[key]
+        
     return render(request, 'payment/payment-success.html')
 
 def payment_failed(request):
